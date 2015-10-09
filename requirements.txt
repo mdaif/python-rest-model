@@ -1,0 +1,11 @@
+decorator==4.0.4
+ipdb==0.8.1
+ipython==4.0.0
+ipython-genutils==0.1.0
+path.py==8.1.2
+pexpect==4.0.1
+pickleshare==0.5
+ptyprocess==0.5
+requests==2.8.0
+simplegeneric==0.8.1
+traitlets==4.0.0
