@@ -10,8 +10,10 @@ class Stock(models.RestModel):
 	price = models.PositiveFloatField()
 
 	class Meta:
-		post = "http://www.mocky.io/v2/5185415ba171ea3a00704eed/"
-
+		post = "http://lalaland/stocks/"
+		put = "http://lalaland/stocks/"
+		delete = "http://lalaland/stocks/delete"
+		get = "http://lalaland/stocks/"
 
 class Student(models.RestModel):
 	name = models.StringField()
@@ -19,9 +21,9 @@ class Student(models.RestModel):
 	gpa = models.PositiveFloatField()
 
 	class Meta:
-		post = "http://www.mocky.io/v2/561a5fe6100000a32068d55f"
+		post = "http://lalaland/students/"
 		put = "http://lalaland/students/{id}"
-		delete = "http://www.mocky.io/v2/561a616f100000ef2068d561"
+		delete = "http://lalaland/students/{id}"
 		get = "http://lalaland/classes/{class_id}/{student_id}"
 
 
@@ -30,10 +32,17 @@ class TestRestModelBehaviors(unittest.TestCase):
 	def test_post_1(self, post_mock):
 		"""Happy path, all arguments are provided to post with correct data types"""
 		stock = Stock()
-		response = stock.post(name='EvilCorp', shares=3, price=2.2)
+
+		stock.post(name='EvilCorp', shares=3, price=2.2)
 		self.assertTrue(post_mock.called)
 		expected_data = {'name': 'EvilCorp', 'shares': 3, 'price': 2.2}
-		post_mock.assert_called_with(Stock.Meta.post, data=json.dumps(expected_data))
+
+		# Testing json data is tricky because the order of the dict can change the solution is provided here http://stackoverflow.com/a/28418085
+		call_args, call_kwargs = post_mock.call_args
+		self.assertEqual(call_args[0], Stock.Meta.post)
+		self.assertIn('data', call_kwargs)
+		self.assertDictEqual(json.loads(call_kwargs['data']), expected_data)
+
 
 	@patch('requests.post')
 	def test_post_2(self, post_mock):
@@ -44,29 +53,124 @@ class TestRestModelBehaviors(unittest.TestCase):
 
 		self.assertFalse(post_mock.called)
 
+	@patch('requests.put')
+	def test_put_1(self, put_mock):
+		"""Happy Path, the put endpoint should be formatted correctly """
+		student = Student()
+		student.format(id=18).put(name='Daif', age=27, gpa=3.6)
+		self.assertTrue(put_mock.called)
+
+		expected_data = {'name': 'Daif', 'age': 27, 'gpa': 3.6}
+
+		call_args, call_kwargs = put_mock.call_args
+		self.assertEqual(call_args[0], Student.Meta.put.format(id=18))  # notice the keyword formatting.
+		self.assertIn('data', call_kwargs)
+		self.assertDictEqual(json.loads(call_kwargs['data']), expected_data)
+
+	@patch('requests.put')
+	def test_put_2(self, put_mock):
+		"""Sad path, data type of an argument is not correct .. that should raise TypeError"""
+		student = Student()
+		with self.assertRaises(TypeError):
+			student.format(id=18).put(name='Daif', age="twenty seven", gpa=3.6)
+
+		self.assertFalse(put_mock.called)
+
+	@patch('requests.put')
+	def test_put_3(self, put_mock):
+		"""Happy Path, the put endpoint should be called correcly even if there is no format required """
+		stock = Stock()
+		stock.put(name='EvilCorp', shares=3, price=2.2)
+		self.assertTrue(put_mock.called)
+
+		expected_data = {'name': 'EvilCorp', 'shares': 3, 'price': 2.2}
+
+		call_args, call_kwargs = put_mock.call_args
+		self.assertEqual(call_args[0], Stock.Meta.put)  # notice the keyword formatting.
+		self.assertIn('data', call_kwargs)
+		self.assertDictEqual(json.loads(call_kwargs['data']), expected_data)
+
+	@patch('requests.delete')
+	def test_delete_1(self, delete_mock):
+		"""Happy Path, the delete endpoint should be formatted correctly """
+		student = Student()
+		student.format(id=18).delete(name='Daif', age=27, gpa=3.6)
+		self.assertTrue(delete_mock.called)
+
+		expected_data = {'name': 'Daif', 'age': 27, 'gpa': 3.6}
+
+		call_args, call_kwargs = delete_mock.call_args
+		self.assertEqual(call_args[0], Student.Meta.delete.format(id=18))  # notice the keyword formatting.
+		self.assertIn('data', call_kwargs)
+		self.assertDictEqual(json.loads(call_kwargs['data']), expected_data)
+
+	@patch('requests.delete')
+	def test_delete_2(self, delete_mock):
+		"""Sad path, data type of an argument is not correct .. that should raise TypeError"""
+		student = Student()
+		with self.assertRaises(TypeError):
+			student.format(id=18).delete(name='Daif', age="twenty seven", gpa=3.6)
+
+		self.assertFalse(delete_mock.called)
+
+	@patch('requests.delete')
+	def test_delete_3(self, delete_mock):
+		"""Happy Path, the delete endpoint should be called correcly even if there is no format required """
+		stock = Stock()
+		stock.delete(name='EvilCorp', shares=3, price=2.2)
+		self.assertTrue(delete_mock.called)
+
+		expected_data = {'name': 'EvilCorp', 'shares': 3, 'price': 2.2}
+
+		call_args, call_kwargs = delete_mock.call_args
+		self.assertEqual(call_args[0], Stock.Meta.delete)  # notice the keyword formatting.
+		self.assertIn('data', call_kwargs)
+		self.assertDictEqual(json.loads(call_kwargs['data']), expected_data)
+
+	@patch('requests.get')
+	def test_get_1(self, get_mock):
+		"""Happy Path, the get endpoint should be formatted correctly """
+		student = Student()
+
+		student.format(class_id=18, student_id=2).get(name='Daif', age=27, gpa=3.6)
+		self.assertTrue(get_mock.called)
+
+		expected_data = {'name': 'Daif', 'age': 27, 'gpa': 3.6}
+
+		call_args, call_kwargs = get_mock.call_args
+		self.assertEqual(call_args[0], Student.Meta.get.format(class_id=18, student_id=2))  # notice the keyword formatting.
+		self.assertIn('data', call_kwargs)
+		self.assertDictEqual(json.loads(call_kwargs['data']), expected_data)
+
+	@patch('requests.get')
+	def test_get_2(self, get_mock):
+		"""Sad path, data type of an argument is not correct .. that should raise TypeError"""
+		student = Student()
+		with self.assertRaises(TypeError):
+			student.format(class_id=18, student_id=2).get(name='Daif', age="twenty seven", gpa=3.6)
+
+		self.assertFalse(get_mock.called)
+
+	@patch('requests.get')
+	def test_get_3(self, get_mock):
+		"""Happy Path, the get endpoint should be called correcly even if there is no format required """
+		stock = Stock()
+		stock.get(name='EvilCorp', shares=3, price=2.2)
+		self.assertTrue(get_mock.called)
+
+		expected_data = {'name': 'EvilCorp', 'shares': 3, 'price': 2.2}
+
+		call_args, call_kwargs = get_mock.call_args
+		self.assertEqual(call_args[0], Stock.Meta.get)  # notice the keyword formatting.
+		self.assertIn('data', call_kwargs)
+		self.assertDictEqual(json.loads(call_kwargs['data']), expected_data)
+
+	def test_unsupported_action(self):
+		stock = Stock()
+		with self.assertRaises(AttributeError):
+			stock.head()
+
+
 
 if __name__ == "__main__":
 	unittest.main()
-	# stock = Stock()
-	# create_response = stock.post(name='EvilCorp', shares=3, price=2.2)
-	# print(create_response.text)
-	#
-	# print("0", Student.__dict__)
-	# student = Student()
-	# print("1", student.__dict__)
-	#
-	# create_student = student.post(name='Daif', age=18, gpa=3.6)
-	# print("2", student.__dict__)
-	# print(create_student.json())
-	#
-	# update_student = student.format(id=10234).put(gpa=4.0)
-	# print("3", student.__dict__)
-	# print(update_student.json())
-	#
-	# get_student = student.get()
-	# print("4", student.__dict__)
-	# print(get_student.json())
-	#
-	# delete_student = student.format(id=10234).delete()
-	# print("5", student.__dict__)
-	# print(delete_student.status_code)

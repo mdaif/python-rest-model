@@ -3,46 +3,60 @@ import requests
 import json
 
 
-def _post(self, format_args=None, **params):
-    self.__dict__ = {}
+def _post(self, **params):
+
+    format_args = self.__dict__.pop('format_args') if 'format_args' in self.__dict__ else None
 
     for k, v in params.items():
         setattr(self, k, v)
 
     body = json.dumps(self.__dict__)
     endpoint = self.Meta.post.format(**format_args) if format_args else self.Meta.post
+    self.format_args = None # this should be handled in a cleaner way
+    self.__dict__ = {}
     return requests.post(endpoint, data=body)
 
 
 def _put(self, **params):
-    self.__dict__ = {}
+
+    format_args = self.__dict__.pop('format_args') if 'format_args' in self.__dict__ else None
 
     for k, v in params.items():
         setattr(self, k, v)
 
     body = json.dumps(self.__dict__)
-    endpoint = self.Meta.put.format(**self.format_args) if self.format_args else self.Meta.put
+    endpoint = self.Meta.put.format(**format_args) if format_args else self.Meta.put
     self.format_args = None # this should be handled in a cleaner way
+    self.__dict__ = {}
     return requests.put(endpoint, data=body)
 
 
-def _delete(self):
-    endpoint = self.Meta.delete.format(**self.format_args) if self.format_args else self.Meta.delete
+def _delete(self, **params):
+    format_args = self.__dict__.pop('format_args') if 'format_args' in self.__dict__ else None
+
+    for k, v in params.items():
+        setattr(self, k, v)
+
+    body = json.dumps(self.__dict__)
+
+    endpoint = self.Meta.delete.format(**format_args) if format_args else self.Meta.delete
     self.format_args = None # this should be handled in a cleaner way
-    return requests.delete(endpoint)
+    self.__dict__ = {}
+    return requests.delete(endpoint, data=body)
 
 
 def _get(self, **params):
     """if get has an id it should be used to retrieve a single item otherwise it would be retrieving a list"""
 
-    self.__dict__ = {}
+    format_args = self.__dict__.pop('format_args') if 'format_args' in self.__dict__ else None
     for k, v in params.items():
         setattr(self, k, v)
 
     body = json.dumps(self.__dict__)
-    endpoint = self.Meta.get.format(**self.format_args) if self.format_args else self.Meta.get
+    endpoint = self.Meta.get.format(**format_args) if format_args else self.Meta.get
     self.format_args = None # this should be handled in a cleaner way
-    return requests.get(self.Meta.get, data=body)
+    self.__dict__ = {}
+    return requests.get(endpoint, data=body)
 
 def _format(self, **format_args):
     self.format_args = format_args
