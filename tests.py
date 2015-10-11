@@ -27,6 +27,7 @@ if __name__ == "__main__":
 	create_response = stock.post(name='IBM', shares=3, price=2.2)
 	print(create_response.text)
 
+	print("0", Student.__dict__)
 	student = Student()
 	print("1", student.__dict__)
 

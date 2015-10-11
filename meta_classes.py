@@ -2,6 +2,7 @@ from primitives import Typed
 import requests
 import json
 
+
 def _post(self, **params):
     self.__dict__ = {}
 
@@ -10,6 +11,7 @@ def _post(self, **params):
 
     body = json.dumps(self.__dict__)
     return requests.post(self.Meta.post, data=body)
+
 
 def _put(self, id, **params):
     self.__dict__ = {}
@@ -20,8 +22,11 @@ def _put(self, id, **params):
     body = json.dumps(self.__dict__)
     return requests.put(self.Meta.put, data=body)
 
+
 def _delete(self, id):
+    setattr(self, 'id', id)
     return requests.delete(self.Meta.delete)
+
 
 def _get(self, id=None, **params):
     """if get has an id it should be used to retrieve a single item otherwise it would be retrieving a list"""
@@ -47,9 +52,17 @@ class RestModelMeta(type):
 
         new_class = type.__new__(cls, clsname, bases, clsdict)
 
-        setattr(new_class, "post", _post)
-        setattr(new_class, "put", _put)
-        setattr(new_class, "delete", _delete)
-        setattr(new_class, "get", _get)
+        if clsname != "RestModel":
+            if 'Meta' not in clsdict:
+                raise Exception("Meta class must be provided")
+
+            if 'post' in clsdict['Meta'].__dict__:
+                setattr(new_class, "post", _post)
+            if 'put' in clsdict['Meta'].__dict__:
+                setattr(new_class, "put", _put)
+            if 'delete' in clsdict['Meta'].__dict__:
+                setattr(new_class, "delete", _delete)
+            if 'get' in clsdict['Meta'].__dict__:
+                setattr(new_class, "get", _get)
 
         return new_class
