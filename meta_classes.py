@@ -3,45 +3,50 @@ import requests
 import json
 
 
-def _post(self, **params):
+def _post(self, format_args=None, **params):
     self.__dict__ = {}
 
     for k, v in params.items():
         setattr(self, k, v)
 
     body = json.dumps(self.__dict__)
-    return requests.post(self.Meta.post, data=body)
+    endpoint = self.Meta.post.format(**format_args) if format_args else self.Meta.post
+    return requests.post(endpoint, data=body)
 
 
-def _put(self, id, **params):
+def _put(self, **params):
     self.__dict__ = {}
-    setattr(self, 'id', id)
+
     for k, v in params.items():
         setattr(self, k, v)
 
     body = json.dumps(self.__dict__)
-    return requests.put(self.Meta.put, data=body)
+    endpoint = self.Meta.put.format(**self.format_args) if self.format_args else self.Meta.put
+    self.format_args = None # this should be handled in a cleaner way
+    return requests.put(endpoint, data=body)
 
 
-def _delete(self, id):
-    setattr(self, 'id', id)
-    return requests.delete(self.Meta.delete)
+def _delete(self):
+    endpoint = self.Meta.delete.format(**self.format_args) if self.format_args else self.Meta.delete
+    self.format_args = None # this should be handled in a cleaner way
+    return requests.delete(endpoint)
 
 
-def _get(self, id=None, **params):
+def _get(self, **params):
     """if get has an id it should be used to retrieve a single item otherwise it would be retrieving a list"""
 
     self.__dict__ = {}
-    if id is not None:
-        setattr(self, 'id', id)
-        # do some string interpolation to the endpoint
     for k, v in params.items():
         setattr(self, k, v)
 
     body = json.dumps(self.__dict__)
-    return requests.put(self.Meta.get, data=body)
+    endpoint = self.Meta.get.format(**self.format_args) if self.format_args else self.Meta.get
+    self.format_args = None # this should be handled in a cleaner way
+    return requests.get(self.Meta.get, data=body)
 
-
+def _format(self, **format_args):
+    self.format_args = format_args
+    return self
 
 
 class RestModelMeta(type):
@@ -56,6 +61,8 @@ class RestModelMeta(type):
             if 'Meta' not in clsdict:
                 raise Exception("Meta class must be provided")
 
+            setattr(new_class, "format_args", None)
+            setattr(new_class, "format", _format)
             if 'post' in clsdict['Meta'].__dict__:
                 setattr(new_class, "post", _post)
             if 'put' in clsdict['Meta'].__dict__:
