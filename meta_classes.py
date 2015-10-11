@@ -1,62 +1,21 @@
 from primitives import Typed
+from types import MethodType, FunctionType
 import requests
 import json
 
 
-def _post(self, **params):
-
+def _execute(self, verb, params):
     format_args = self.__dict__.pop('format_args') if 'format_args' in self.__dict__ else None
 
     for k, v in params.items():
         setattr(self, k, v)
 
     body = json.dumps(self.__dict__)
-    endpoint = self.Meta.post.format(**format_args) if format_args else self.Meta.post
+    endpoint = self.Meta.__dict__[verb].format(**format_args) if format_args else self.Meta.__dict__[verb]
     self.format_args = None # this should be handled in a cleaner way
     self.__dict__ = {}
-    return requests.post(endpoint, data=body)
+    return requests.__dict__[verb](endpoint, data=body)
 
-
-def _put(self, **params):
-
-    format_args = self.__dict__.pop('format_args') if 'format_args' in self.__dict__ else None
-
-    for k, v in params.items():
-        setattr(self, k, v)
-
-    body = json.dumps(self.__dict__)
-    endpoint = self.Meta.put.format(**format_args) if format_args else self.Meta.put
-    self.format_args = None # this should be handled in a cleaner way
-    self.__dict__ = {}
-    return requests.put(endpoint, data=body)
-
-
-def _delete(self, **params):
-    format_args = self.__dict__.pop('format_args') if 'format_args' in self.__dict__ else None
-
-    for k, v in params.items():
-        setattr(self, k, v)
-
-    body = json.dumps(self.__dict__)
-
-    endpoint = self.Meta.delete.format(**format_args) if format_args else self.Meta.delete
-    self.format_args = None # this should be handled in a cleaner way
-    self.__dict__ = {}
-    return requests.delete(endpoint, data=body)
-
-
-def _get(self, **params):
-    """if get has an id it should be used to retrieve a single item otherwise it would be retrieving a list"""
-
-    format_args = self.__dict__.pop('format_args') if 'format_args' in self.__dict__ else None
-    for k, v in params.items():
-        setattr(self, k, v)
-
-    body = json.dumps(self.__dict__)
-    endpoint = self.Meta.get.format(**format_args) if format_args else self.Meta.get
-    self.format_args = None # this should be handled in a cleaner way
-    self.__dict__ = {}
-    return requests.get(endpoint, data=body)
 
 def _format(self, **format_args):
     self.format_args = format_args
@@ -77,13 +36,17 @@ class RestModelMeta(type):
 
             setattr(new_class, "format_args", None)
             setattr(new_class, "format", _format)
-            if 'post' in clsdict['Meta'].__dict__:
-                setattr(new_class, "post", _post)
-            if 'put' in clsdict['Meta'].__dict__:
-                setattr(new_class, "put", _put)
-            if 'delete' in clsdict['Meta'].__dict__:
-                setattr(new_class, "delete", _delete)
-            if 'get' in clsdict['Meta'].__dict__:
-                setattr(new_class, "get", _get)
+            setattr(new_class, '_execute', _execute)
+
+            verbs = [x for x,y in clsdict['Meta'].__dict__.items() if type(y) == str and not x.startswith("__")]
+
+            method_definition = """
+def _{0}(self, **params):
+    self._execute('{0}', params)
+            """
+            for verb in verbs:
+                supported_verb = method_definition.format(verb)
+                exec(supported_verb)
+                setattr(new_class, verb, locals()["_" + verb])
 
         return new_class
