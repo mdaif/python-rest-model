@@ -16,3 +16,11 @@ class PositiveFloatField(Float, Positive):
 
 class StringField(String):
     pass
+
+
+class IntegerField(Integer):
+	pass
+
+
+class FloatField(Float):
+	pass
