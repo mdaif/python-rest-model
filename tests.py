@@ -222,7 +222,7 @@ class TestRestModelBehaviors(unittest.TestCase):
 		self.assertIn('data', call_kwargs)
 		self.assertDictEqual(call_kwargs['data'], expected_data)
 
-	def test_unsupported_action(self):
+	def test_undefined_action(self):
 		stock = Stock()
 		with self.assertRaises(AttributeError):
 			stock.head()
