@@ -22,7 +22,8 @@ def _execute(self, verb, params):
     self.format_args = None # this should be handled in a cleaner way
     self.json_body = None
     self.__dict__ = {}
-    return requests.__dict__[verb](endpoint, data=body, headers=headers)
+    self.response = requests.__dict__[verb](endpoint, data=body, headers=headers)
+    return self
 
 
 def _format(self, json_body=False, **format_args):
@@ -52,7 +53,7 @@ class RestModelMeta(type):
 
             method_definition = """
 def _{0}(self, **params):
-    self._execute('{0}', params)
+    return self._execute('{0}', params)
             """
             for verb in verbs:
                 supported_verb = method_definition.format(verb)
