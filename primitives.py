@@ -1,3 +1,5 @@
+"""Implements the building blocks of data types using Descriptor protocol."""
+
 class Descriptor:
 	def __init__(self, name=None):
 		self._name = name
