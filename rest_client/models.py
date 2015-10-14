@@ -1,5 +1,5 @@
-from meta_classes import RestModelMeta
-from primitives import Integer, Positive, String, Float, List
+from .meta_classes import RestModelMeta
+from .primitives import Integer, Positive, String, Float, List
 
 
 class RestModel(metaclass=RestModelMeta):

@@ -1,8 +1,8 @@
+from rest_client import models
 from unittest.mock import patch
 import unittest
 import json
 
-import models
 
 
 class Stock(models.RestModel):

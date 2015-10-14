@@ -2,3 +2,5 @@
 env*
 *.swp
 .idea
+rest_client.egg-info/
+dist/

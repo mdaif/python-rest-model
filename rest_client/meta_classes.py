@@ -1,6 +1,5 @@
+from .primitives import Typed
 import json
-
-from primitives import Typed
 import requests
 
 
