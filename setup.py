@@ -9,6 +9,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='python-rest-client',
+    url="https://github.com/mdaif/python-rest-client",
     version='1.0',
     packages=['rest_client', 'tests'],
     include_package_data=True,
