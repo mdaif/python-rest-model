@@ -2,5 +2,6 @@
 env*
 *.swp
 .idea
-rest_client.egg-info/
 dist/
+python_rest_client.egg-info/*
+rest_client.egg-info/*

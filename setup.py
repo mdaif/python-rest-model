@@ -8,7 +8,7 @@ with open(os.path.join(os.path.dirname(__file__), 'README.rst')) as readme:
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
-    name='rest_client',
+    name='python-rest-client',
     version='1.0',
     packages=['rest_client', 'tests'],
     include_package_data=True,
