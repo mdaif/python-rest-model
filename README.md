@@ -11,6 +11,14 @@ The Solution
 Python Rest Model solves these issues by treating the RESTful endpoints as they should be ... endpoints to resources !
 It lets you define your own resources like you do in Django models, by extending a class and defining some attributes, and that's it ! You can have objects that handles data type validation on attributes, define the endpoints once at a single location, and the operations can be chained.
 
+Installation
+============
+Python Rest Model is available on PyPi and can be installed using pip
+
+```
+    pip install python-rest-model
+```
+
 Quick Start
 ============
 
