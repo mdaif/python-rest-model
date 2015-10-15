@@ -76,4 +76,6 @@ Currently supported data types
  - IntegerField
  - FloatField
  - ListField
+ - PositiveIntegerField
+ - PositiveFloatField
 
