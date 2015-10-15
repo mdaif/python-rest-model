@@ -1,4 +1,4 @@
-from rest_client import models
+from rest_model import models
 from unittest.mock import patch
 import unittest
 import json

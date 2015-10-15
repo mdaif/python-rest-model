@@ -8,10 +8,10 @@ with open(os.path.join(os.path.dirname(__file__), 'README.rst')) as readme:
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
-    name='python-rest-client',
-    url="https://github.com/mdaif/python-rest-client",
+    name='python-rest-model',
+    url="https://github.com/mdaif/python-rest-model",
     version='1.0',
-    packages=['rest_client', 'tests'],
+    packages=['rest_model', 'tests'],
     include_package_data=True,
     license='OSI Approved',  # example license
     description='A standard way to consume a RESTful service, inspired by Django models',

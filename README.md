@@ -1,6 +1,6 @@
 Introduction
 ============
-Python Rest Client exists to solve the common problem of consuming RESTful services.
+Python Rest Model exists to solve the common problem of consuming RESTful services.
 
 The Problem
 ============
@@ -8,16 +8,16 @@ In an OOP language as Python, developers tend to think of their data as objects 
 
 The Solution
 ============
-Python Rest Client solves these issues by treating the RESTful endpoints as they should be ... endpoints to resources !
+Python Rest Model solves these issues by treating the RESTful endpoints as they should be ... endpoints to resources !
 It lets you define your own resources like you do in Django models, by extending a class and defining some attributes, and that's it ! You can have objects that handles data type validation on attributes, define the endpoints once at a single location, and the operations can be chained.
 
 Quick Start
 ============
 
-After you install Python Rest Client you can use it as following.
+After you install Python Rest Model you can use it as following.
 ```
-    from rest_client import models         # import models
-    
+    from rest_model import models         # import models
+
     class Student(models.RestModel):       # extend models.RestModel
       name = models.StringField()
       age = models.PositiveIntegerField()
@@ -78,4 +78,3 @@ Currently supported data types
  - ListField
  - PositiveIntegerField
  - PositiveFloatField
-
