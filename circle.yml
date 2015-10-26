@@ -1,0 +1,4 @@
+machine:
+  python:
+    version:
+      python3.4
