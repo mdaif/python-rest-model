@@ -1,4 +1,7 @@
-from .primitives import Typed
+try:
+    from .primitives import Typed
+except SystemError:
+    from primitives import Typed
 import json
 import requests
 
