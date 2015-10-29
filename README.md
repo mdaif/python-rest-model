@@ -1,3 +1,5 @@
+Build Status [![Circle CI](https://circleci.com/gh/mdaif/python-rest-model/tree/master.svg?style=svg)](https://circleci.com/gh/mdaif/python-rest-model/tree/master)
+
 Introduction
 ============
 Python Rest Model exists to solve the common problem of consuming RESTful services.
