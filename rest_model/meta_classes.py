@@ -3,10 +3,8 @@
 Meta Classes:
 RestModelMeta -- create rest-model classes.
 """
-try:
-    from .primitives import Typed
-except SystemError:
-    from primitives import Typed
+from .primitives import Typed
+
 import json
 import requests
 

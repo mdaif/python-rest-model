@@ -1,10 +1,6 @@
 """Contain Fields to be used by user code."""
-try:
-    from .meta_classes import RestModelMeta
-    from .primitives import Integer, Positive, String, Float, List
-except SystemError:
-    from meta_classes import RestModelMeta
-    from primitives import Integer, Positive, String, Float, List
+from .meta_classes import RestModelMeta
+from .primitives import Integer, Positive, String, Float, List
 
 
 class RestModel(metaclass=RestModelMeta):

@@ -2,15 +2,16 @@
 from unittest.mock import patch
 import unittest
 import json
-import models
+from .models import RestModel, StringField, PositiveFloatField, \
+    PositiveIntegerField
 
 
-class Stock(models.RestModel):
+class Stock(RestModel):
     """Implement Rest model."""
 
-    name = models.StringField()
-    shares = models.PositiveIntegerField()
-    price = models.PositiveFloatField()
+    name = StringField()
+    shares = PositiveIntegerField()
+    price = PositiveFloatField()
 
     class Meta:
         """Associate actions with endpoints."""
@@ -21,12 +22,12 @@ class Stock(models.RestModel):
         get = "http://shangri-la/stocks/"
 
 
-class Student(models.RestModel):
+class Student(RestModel):
     """Implement Rest model."""
 
-    name = models.StringField()
-    age = models.PositiveIntegerField()
-    gpa = models.PositiveFloatField()
+    name = StringField()
+    age = PositiveIntegerField()
+    gpa = PositiveFloatField()
 
     class Meta:
         """Associate actions with endpoints."""

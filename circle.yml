@@ -3,4 +3,4 @@ machine:
     version: 3.4.3
 test:
   override:
-    - python rest_model/tests.py
+    - python -m unittest discover -t .

@@ -6,3 +6,4 @@ dist/
 python_rest_client.egg-info/*
 rest_client.egg-info/*
 python_rest_model.egg-info/
+.coverage
