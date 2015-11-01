@@ -1,3 +1,4 @@
+"""Contain Fields to be used by user code."""
 try:
     from .meta_classes import RestModelMeta
     from .primitives import Integer, Positive, String, Float, List
@@ -7,35 +8,42 @@ except SystemError:
 
 
 class RestModel(metaclass=RestModelMeta):
-    """To be subclassed by the user's Models"""
+    """Be a superclass to the user Models."""
+
     pass
 
 
 class PositiveIntegerField(Integer, Positive):
-    """Integer field with values >= 0"""
+    """Create Integer field with values >= 0."""
+
     pass
 
 
 class PositiveFloatField(Float, Positive):
-    """Float field with values >= 0.0 """
+    """Create Float field with values >= 0.0 ."""
+
     pass
 
 
 class StringField(String):
-    """String Field"""
+    """Create String Field."""
+
     pass
 
 
 class IntegerField(Integer):
-    """Integer Field"""
+    """Create Integer Field."""
+
     pass
 
 
 class FloatField(Float):
-    """Float Field"""
+    """Create Float Field."""
+
     pass
 
 
 class ListField(List):
-    """List Field"""
+    """Create List Field."""
+
     pass
