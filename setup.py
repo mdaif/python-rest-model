@@ -10,7 +10,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 setup(
     name='python-rest-model',
     url="https://github.com/mdaif/python-rest-model",
-    version='1.0.1',
+    version='1.0.2',
     packages=['rest_model'],
     include_package_data=True,
     license='OSI Approved',  # example license
