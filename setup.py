@@ -18,7 +18,7 @@ setup(
     long_description=README,
     author='Mohamed Daif',
     author_email='mohamed@daif.me',
-    install_requires = ['requests==2.8.0'],
+    install_requires = ['requests==2.20.0'],
     classifiers=[
         'Intended Audience :: Developers',
         'License :: OSI Approved :: Apache Software License',
